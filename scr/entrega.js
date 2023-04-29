@@ -149,9 +149,6 @@ const item3 = {
 }
 
 
-
-
-
 async function productInteraction(){
     
 const productManager = new ProductManager();
@@ -174,8 +171,3 @@ const productManager = new ProductManager();
 }
 
 productInteraction();
-
-/* 
-
-
-*/
