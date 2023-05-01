@@ -6,7 +6,7 @@ const app = express();
 const port = 3000;
 
 app.listen(port, () => {
-  console.log(`app listening from http://localhost:${port}`)
+  console.log(`app listening from http://localhost:${port}/products`)
 });
 
 app.get("/products", async (req, res) => {
