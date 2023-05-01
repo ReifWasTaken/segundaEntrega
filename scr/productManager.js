@@ -1,35 +1,34 @@
-const fs = require("fs");
+import fs from "fs"
 
-class ProductManager {
+ class ProductManager {
     constructor(path){
-        this.path = "products.json";
-        this.products = [];
-        this.id = 0;
+        this.path = "./scr/products.json";
     }
 
-    //verifica si el archivo existe si no crea uno
-    async checkFile(){
+    async getProducts(){
         try{
-
-           this.products = JSON.parse(await fs.promises.readFile(this.path, "utf-8"));
-        }
-        catch{
-            console.log("File dont exist");
-
-            try{
-                await fs.promises.writeFile(this.path, "[]", null, 2);
-                console.log("file created");
+            if(fs.existsSync(this.path)){
+                const data = await fs.promises.readFile(this.path, "utf-8")
+                return JSON.parse(data);
             }
-            catch(err){
-                console.log("Error creating file");
-            }
+
+            await fs.promises.writeFile(this.path, JSON.stringify([]), null, 2);
+            return [];
         }
+        catch(err){
+            throw new err
+        }
+
     }
-    async addProduct(product){
 
-            //verifica si el codigo existe
+    async addProduct(product){
+        try{ 
+            let data = await this.getProducts();
+
+        //verifica si el codigo existe
+        const serchCode = data.some((prod) => prod.code === product.code)
            
-            if(this.products.some((prod) => prod.code === product.code)){
+            if(serchCode){
                 return "code allready exist"
             }
             
@@ -42,12 +41,13 @@ class ProductManager {
                 {
                     return "some data is missing"
                 } 
-            try{
+          
 
-                product = {id: ++this.id, ...product};
-                this.products.push(product);
-                const productosSting = JSON.stringify(this.products)
-                await fs.promises.writeFile(this.path, productosSting, null, 2);
+                let id = data.length > 0 ? data[data.length -1].id +1 : 1;
+                product = {id, ...product};
+                data.push(product);
+                const productosSting = JSON.stringify(data , null, 2)
+                await fs.promises.writeFile(this.path, productosSting);
 
 
                 return product, "product added"
@@ -57,19 +57,22 @@ class ProductManager {
         }    
     }
     
-    async getProducts(){
-
-        return this.products = JSON.parse(await fs.promises.readFile(this.path, "utf-8"));
-
-    }
 
     async getProductById(id){
-        let prodFound = this.products.find((prod)=> prod.id === id);
+        try{
+            let data = await this.getProducts();
 
-        if(!prodFound){
-            return "not found";
+            let prodFound = data.find((prod)=> prod.id === id);
+
+            if(!prodFound){
+                return "not found";
+            }
+            return prodFound;
+            }
+        catch(err){
+            throw new err
         }
-        return prodFound;
+
     }
 
     async deleteProduct(id) {
@@ -78,12 +81,12 @@ class ProductManager {
             const index = auxProducts.findIndex((product)=> product.id === id);
 
             if(index === -1){
-                console.log("ID not found");
+                return "ID not found"
             }else{
             auxProducts.splice(index, 1);
 
-            const productosSting = JSON.stringify(this.products)
-            await fs.promises.writeFile(this.path, productosSting, null, 2); 
+            const productosSting = JSON.stringify(auxProducts, null, 2)
+            await fs.promises.writeFile(this.path, productosSting); 
 
             return "product Deleted"
             }
@@ -106,8 +109,8 @@ class ProductManager {
                 const auxProduct = { ...auxProducts[index], ...updatedValue};
                 auxProducts.splice(index, 1, auxProduct);
 
-            const productosSting = JSON.stringify(this.products)
-            await fs.promises.writeFile(this.path, productosSting, null, 2); 
+            const productosSting = JSON.stringify(auxProducts, null, 2)
+            await fs.promises.writeFile(this.path, productosSting); 
 
             return "Updated Product"
             }
@@ -147,27 +150,25 @@ const item3 = {
     code: "a00",
     stock: 1,
 }
-
-
-async function productInteraction(){
-    
 const productManager = new ProductManager();
 
-
-    await productManager.checkFile();
-
+/* async function productInteraction(){
+    
     console.log(await productManager.addProduct(item));
     console.log(await productManager.addProduct(item2));
     console.log(await productManager.addProduct(item3));
+
     console.log(await productManager.getProducts());
 
     console.log(await productManager.deleteProduct(2));  
     console.log(await productManager.getProducts());
 
-
+    console.log(await productManager.getProductById(3)); 
     
-    console.log(await productManager.updateProduct(3, {price: 400}));
-    console.log(await productManager.getProductById(3));
+    console.log(await productManager.updateProduct(1, {price: 400}));
+    
 }
+productInteraction();  */
 
-productInteraction();
+
+export default ProductManager;
