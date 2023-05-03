@@ -16,7 +16,7 @@ import fs from "fs"
             return [];
         }
         catch(err){
-            throw new err
+            throw new err ("get product failed");
         }
 
     }
@@ -29,7 +29,7 @@ import fs from "fs"
         const serchCode = data.some((prod) => prod.code === product.code)
            
             if(serchCode){
-                return "code allready exist"
+                console.log("Code allredy exist");
             }
             
             if( !product.title ||
@@ -39,7 +39,7 @@ import fs from "fs"
                 !product.code ||
                 !product.stock)
                 {
-                    return "some data is missing"
+                    console.log("some data is missing");
                 } 
           
 
@@ -53,7 +53,7 @@ import fs from "fs"
                 return product, "product added"
             }
         catch(err){
-            console.log("addProduct failed");
+            throw new err ("addProduct failed");
         }    
     }
     
@@ -64,13 +64,13 @@ import fs from "fs"
 
             let prodFound = data.find((prod)=> prod.id === id);
 
-            if(!prodFound){
-                return "not found";
-            }
-            return prodFound;
-            }
-        catch(err){
-            throw new err
+                if(!prodFound){
+                    throw new error ("ID not found");
+                }
+
+            return prodFound;     
+        }catch(err){
+            throw new err ("getProductById failed");
         }
 
     }
@@ -81,7 +81,7 @@ import fs from "fs"
             const index = auxProducts.findIndex((product)=> product.id === id);
 
             if(index === -1){
-                return "ID not found"
+                console.log("ID not found")
             }else{
             auxProducts.splice(index, 1);
 
@@ -93,7 +93,7 @@ import fs from "fs"
         }
 
         catch(err){
-            throw err
+            throw new err ("deleteProduct Failed");
         }
     }
 
@@ -117,7 +117,7 @@ import fs from "fs"
         }
 
         catch(err){
-            throw err
+            throw new err ("updateProduct failed");
         }
     }
     
@@ -160,10 +160,10 @@ const productManager = new ProductManager();
 
     console.log(await productManager.getProducts());
 
-    console.log(await productManager.deleteProduct(2));  
+    // console.log(await productManager.deleteProduct(2));  
     console.log(await productManager.getProducts());
 
-    console.log(await productManager.getProductById(3)); 
+    console.log(await productManager.getProductById(3));  
     
     console.log(await productManager.updateProduct(1, {price: 400}));
     
