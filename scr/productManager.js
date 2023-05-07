@@ -131,15 +131,17 @@ const item =
     thumbnail: "https://media.tenor.com/KDskB0xTY9IAAAAC/potatoes-lotr.gif",
     code: "a01",
     stock: 2000,
+    category: "food",
 }
 
 const item2 = {
-    title: "fish",
-    description: "it's a fish",
+    title: "gimli's axe",
+    description: "the migthy axe of a drwaf",
     price: 4000,
-    thumbnail: "https://www.meme-arsenal.com/memes/e27cd6ec6c89cfdaec356d0e0672a666.jpg",
+    thumbnail: "https://iloveswords.com/images/LOTR/MDL_gimli.jpg",
     code: "a02",
     stock: 24,
+    category: "weapons",
 }
 
 const item3 = {
@@ -149,6 +151,7 @@ const item3 = {
     thumbnail: "https://preview.redd.it/huj0pn5eftaz.gif?format=png8&s=b6f4bc572aa539489ab8642dc4a81f2398eabd24",
     code: "a00",
     stock: 1,
+    category: "food",
 }
 const productManager = new ProductManager();
 
